@@ -94,18 +94,18 @@
 
 
 
-<meta name="description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。  Python版本Python 3.x的版本是不兼容2.7.x的，所以用3.x版本写的代码未必能用2.7.x的Python运行。查看系统默认的Python版本可以使用： 12python -Vpython --ver">
+<meta name="description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。">
 <meta name="keywords" content="Python">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Python基础">
 <meta property="og:url" content="http://victorzhong.github.io/2017/08/06/Python基础/index.html">
 <meta property="og:site_name" content="Victor&#39;s Sketch">
-<meta property="og:description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。  Python版本Python 3.x的版本是不兼容2.7.x的，所以用3.x版本写的代码未必能用2.7.x的Python运行。查看系统默认的Python版本可以使用： 12python -Vpython --ver">
+<meta property="og:description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-01-06T16:00:29.915Z">
+<meta property="og:updated_time" content="2018-01-06T17:29:04.394Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Python基础">
-<meta name="twitter:description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。  Python版本Python 3.x的版本是不兼容2.7.x的，所以用3.x版本写的代码未必能用2.7.x的Python运行。查看系统默认的Python版本可以使用： 12python -Vpython --ver">
+<meta name="twitter:description" content="Python，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。">
 
 
 
@@ -181,7 +181,7 @@
       </a>
     </div>
       
-        <p class="site-subtitle"></p>
+        <h1 class="site-subtitle" itemprop="description"></h1>
       
   </div>
 
@@ -207,6 +207,16 @@
               <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
             
             首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
           </a>
         </li>
       
@@ -268,7 +278,7 @@
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Victor Chung">
       <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="image" content="/uploads/avatar.png">
     </span>
 
     <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
@@ -280,7 +290,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">Python基础</h1>
+          <h2 class="post-title" itemprop="name headline">Python基础</h2>
         
 
         <div class="post-meta">
@@ -355,6 +365,7 @@
         <blockquote>
 <p><strong>Python</strong>，（读作：/ˈpaɪθən/【英】或 /ˈpaɪθɑːn/【美】），是除了PHP外世界上最好的语言（误）。本文介绍Python的基础语法，基于Python 3.5版本。</p>
 </blockquote>
+<a id="more"></a>
 <h2 id="Python版本"><a href="#Python版本" class="headerlink" title="Python版本"></a>Python版本</h2><p>Python 3.x的版本是不兼容2.7.x的，所以用3.x版本写的代码未必能用2.7.x的Python运行。查看系统默认的Python版本可以使用：</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">python -V</span><br><span class="line">python --version</span><br></pre></td></tr></table></figure>
 <h2 id="基础数据类型"><a href="#基础数据类型" class="headerlink" title="基础数据类型"></a>基础数据类型</h2><p>大多数编程语言都会有整型、浮点数、布尔、字符串等类型，Python也不例外，而且定义及使用与主流的语言非常相近。</p>
@@ -369,7 +380,7 @@
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">l = [<span class="number">2</span>, <span class="number">5</span>, <span class="number">3</span>]  <span class="comment"># 创建一个list</span></span><br><span class="line">print(l, l[<span class="number">2</span>], l[<span class="number">-1</span>])  <span class="comment"># 索引从0开始，若为负数最后一个数的索引为-1：[2, 5, 3] 3 3</span></span><br><span class="line">l[<span class="number">1</span>] = <span class="string">'apple'</span></span><br><span class="line">print(l)  <span class="comment"># list可以包含不同类型的数据：[2, 'apple', 3]</span></span><br><span class="line">l.append(<span class="string">'banana'</span>)  <span class="comment"># 追加元素</span></span><br><span class="line">print(l)  <span class="comment"># [2, 'apple', 3, 'banana']</span></span><br><span class="line">l.pop()  <span class="comment"># 将最后一个元素出栈</span></span><br><span class="line">print(l)  <span class="comment"># [2, 'apple', 3]</span></span><br></pre></td></tr></table></figure>
 <h4 id="slicing切片"><a href="#slicing切片" class="headerlink" title="slicing切片"></a>slicing切片</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nums = list(range(<span class="number">6</span>))</span><br><span class="line">print(nums)  <span class="comment"># 使用range方法生成整型list：[0, 1, 2, 3, 4, 5]</span></span><br><span class="line">print(nums[<span class="number">2</span>:<span class="number">5</span>])  <span class="comment"># 索引为[2,5)的切片：[2, 3, 4]</span></span><br><span class="line">print(nums[<span class="number">2</span>:])  <span class="comment"># 索引由2到最后的切片：[2, 3, 4, 5]</span></span><br><span class="line">print(nums[:<span class="number">3</span>])  <span class="comment"># 索引为[0,3)的切片：[0, 1, 2]</span></span><br><span class="line">print(nums[:])  <span class="comment"># [0, 1, 2, 3, 4, 5]</span></span><br><span class="line">print(nums[:<span class="number">-2</span>])  <span class="comment"># 索引从[0,-2)的切片：[0, 1, 2, 3]</span></span><br><span class="line">nums[<span class="number">2</span>:<span class="number">4</span>] = [<span class="number">88</span>, <span class="number">99</span>]  <span class="comment"># 给索引从[2,4)的切片赋值</span></span><br><span class="line">print(nums)  <span class="comment"># [0, 1, 88, 99, 4, 5]</span></span><br></pre></td></tr></table></figure>
 <h4 id="Loops循环"><a href="#Loops循环" class="headerlink" title="Loops循环"></a>Loops循环</h4><p>Python的代码块用 <strong>缩进</strong> 标示，而非很多语言使用的花括号{}。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">letters = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>]</span><br><span class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> letters:</span><br><span class="line">    print(letter)  <span class="comment"># a b c d </span></span><br><span class="line"><span class="keyword">for</span> idx, letter <span class="keyword">in</span> enumerate(letters):</span><br><span class="line">    <span class="comment"># No0 is a No1 is b No2 is c No3 is d</span></span><br><span class="line">    print(<span class="string">'No%d is %s'</span> % (idx, letter))</span><br></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">letters = [<span class="string">'a'</span>, <span class="string">'b'</span>, <span class="string">'c'</span>, <span class="string">'d'</span>]</span><br><span class="line"><span class="keyword">for</span> letter <span class="keyword">in</span> letters:</span><br><span class="line">    print(letter)  <span class="comment"># a b c d</span></span><br><span class="line"><span class="keyword">for</span> idx, letter <span class="keyword">in</span> enumerate(letters):</span><br><span class="line">    <span class="comment"># No0 is a No1 is b No2 is c No3 is d</span></span><br><span class="line">    print(<span class="string">'No%d is %s'</span> % (idx, letter))</span><br></pre></td></tr></table></figure>
 <h4 id="List-comprehensions列表解析器"><a href="#List-comprehensions列表解析器" class="headerlink" title="List comprehensions列表解析器"></a>List comprehensions列表解析器</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">nums = list(range(<span class="number">6</span>))</span><br><span class="line">square = []</span><br><span class="line"><span class="keyword">for</span> num <span class="keyword">in</span> nums:</span><br><span class="line">    square.append(num ** <span class="number">2</span>)</span><br><span class="line">print(square)  <span class="comment"># [0, 1, 4, 9, 16, 25]</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用解析器</span></span><br><span class="line">square2 = [x ** <span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> nums]</span><br><span class="line">print(square2)  <span class="comment"># [0, 1, 4, 9, 16, 25]</span></span><br></pre></td></tr></table></figure>
 <p>解析器也可以包含表达式：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">nums = list(range(<span class="number">6</span>))</span><br><span class="line">square = [x ** <span class="number">2</span> <span class="keyword">for</span> x <span class="keyword">in</span> nums <span class="keyword">if</span> (x % <span class="number">2</span> == <span class="number">0</span>)]</span><br><span class="line">print(square)  <span class="comment"># 输出索引为偶数的：[0, 4, 16]</span></span><br></pre></td></tr></table></figure>
@@ -523,6 +534,26 @@
       
 
       
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/07/22/Mac常用开发工具（持续更新）/" rel="next" title="Mac常用工具">
+                <i class="fa fa-chevron-left"></i> Mac常用工具
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/08/25/Mac修改MySQL的字符编码/" rel="prev" title="Mac修改MySQL的字符编码">
+                Mac修改MySQL的字符编码 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
 
       
       
@@ -583,19 +614,19 @@
       <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
-               src="/images/avatar.gif"
+               src="/uploads/avatar.png"
                alt="Victor Chung" />
           <p class="site-author-name" itemprop="name">Victor Chung</p>
            
               <p class="site-description motion-element" itemprop="description"></p>
-          
+           
         </div>
         <nav class="site-state motion-element">
 
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">1</span>
+                <span class="site-state-item-count">4</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -605,10 +636,10 @@
             
             
             <div class="site-state-item site-state-categories">
-              
-                <span class="site-state-item-count">1</span>
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">5</span>
                 <span class="site-state-item-name">分类</span>
-              
+              </a>
             </div>
           
 
@@ -616,10 +647,10 @@
             
             
             <div class="site-state-item site-state-tags">
-              
-                <span class="site-state-item-count">1</span>
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">6</span>
                 <span class="site-state-item-name">标签</span>
-              
+              </a>
             </div>
           
 
@@ -628,6 +659,19 @@
         
 
         <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/VictorZhong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
           
         </div>
 
@@ -674,7 +718,7 @@
       <div class="footer-inner">
         <div class="copyright" >
   
-  &copy; 
+  &copy;  2015 - 
   <span itemprop="copyrightYear">2018</span>
   <span class="with-love">
     <i class="fa fa-heart"></i>
