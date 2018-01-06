@@ -102,14 +102,14 @@
 <meta property="og:site_name" content="Victor&#39;s Sketch">
 <meta property="og:description" content="Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(Map), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://victorzhong.github.io/2017/09/11/Mac安装Redis/uploads/2017091101.png">
-<meta property="og:image" content="http://victorzhong.github.io/2017/09/11/Mac安装Redis/uploads/2017091102.png">
-<meta property="og:image" content="http://victorzhong.github.io/2017/09/11/Mac安装Redis/uploads/2017091103.png">
-<meta property="og:updated_time" content="2018-01-06T17:25:36.183Z">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2017091101.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2017091102.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2017091103.png">
+<meta property="og:updated_time" content="2018-01-06T17:58:49.402Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Mac安装Redis">
 <meta name="twitter:description" content="Redis是一个开源的使用ANSI C语言编写、遵守BSD协议、支持网络、可基于内存亦可持久化的日志型、Key-Value数据库，并提供多种语言的API。它通常被称为数据结构服务器，因为值（value）可以是 字符串(String), 哈希(Map), 列表(list), 集合(sets) 和 有序集合(sorted sets)等类型。">
-<meta name="twitter:image" content="http://victorzhong.github.io/2017/09/11/Mac安装Redis/uploads/2017091101.png">
+<meta name="twitter:image" content="http://victorzhong.github.io/uploads/2017091101.png">
 
 
 
@@ -382,10 +382,10 @@
 <h3 id="2、-解压"><a href="#2、-解压" class="headerlink" title="2、 解压"></a>2、 解压</h3><p>使用解压工具解压，或使用命令</p>
 <figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tar zxvf redis-x.x.x.tar</span><br></pre></td></tr></table></figure>
 <p>然后将解压后的文件夹拷贝至/usr/local目录下，改名为redis。此步骤需要root权限，所以需要输入密码。</p>
-<p><img src="uploads/2017091101.png" alt="拷贝后的路径"></p>
+<p><img src="/uploads/2017091101.png" alt="拷贝后的路径"></p>
 <h3 id="3、安装"><a href="#3、安装" class="headerlink" title="3、安装"></a>3、安装</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">## 编译</span></span><br><span class="line">sudo make <span class="built_in">test</span></span><br><span class="line"><span class="comment">## 编译完看到 \o/ All tests passed without errors! 后开始安装</span></span><br><span class="line">sudo make install</span><br><span class="line"><span class="comment">## 安装完成后，运行以下命令查看reids版本信息</span></span><br><span class="line">redis-server --version</span><br><span class="line"><span class="comment">## 使用以下命令启动redis服务</span></span><br><span class="line">redis-server</span><br></pre></td></tr></table></figure>
-<p><img src="uploads/2017091102.png" alt="Redis版本"></p>
-<p><img src="uploads/2017091103.png" alt="Redis成功安装图示"></p>
+<p><img src="/uploads/2017091102.png" alt="Redis版本"></p>
+<p><img src="/uploads/2017091103.png" alt="Redis成功安装图示"></p>
 <h2 id="二、配置"><a href="#二、配置" class="headerlink" title="二、配置"></a>二、配置</h2><p>先备份一下附带的redis.conf，然后开始编辑，主要要注意如下几个地方。</p>
 <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"># 端口号</span><br><span class="line">port 6379</span><br><span class="line"></span><br><span class="line"># 超时</span><br><span class="line">timeout 300</span><br><span class="line"></span><br><span class="line"># 配置守护进程</span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line"># 进程文件</span><br><span class="line">pidfile /usr/local/redis/redis.pid</span><br><span class="line"></span><br><span class="line"># 日志级别</span><br><span class="line"># This can be one of:</span><br><span class="line"># debug (a lot of information, useful for development/testing)</span><br><span class="line"># verbose (many rarely useful info, but not a mess like the debug level)</span><br><span class="line"># notice (moderately verbose, what you want in production probably)</span><br><span class="line"># warning (only very important / critical messages are logged)</span><br><span class="line">loglevel debug</span><br><span class="line"></span><br><span class="line"># 日志文件</span><br><span class="line">logfile /usr/local/redis/log-redis.log</span><br><span class="line"></span><br><span class="line"># 数据存放路径</span><br><span class="line">dir /usr/local/redis/db/</span><br></pre></td></tr></table></figure>
 <p>配置完成后，启动redis-server。</p>
