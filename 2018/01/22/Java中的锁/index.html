@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="Mac,Database,MySQL," />
+  <meta name="keywords" content="Java," />
 
 
 
@@ -94,20 +94,18 @@
 
 
 
-<meta name="description" content="查看数据库编码： 1show variables like &apos;char%&apos;;">
-<meta name="keywords" content="Mac,Database,MySQL">
+<meta name="description" content="并发编程一定绕不过锁，锁作为共享数据并保持其一致性的工具，在Java中可用synchronized、ReentrantLock实现。常见的锁的名称有公平锁/非公平锁、独享锁/共享锁、互斥锁/读写锁、乐观锁/悲观锁、偏向锁/轻量级锁/重量级锁、自旋锁等等，这些名称并不一定代表一个独立的分类，有的指锁的状态，有的指锁的特性。本文对每个名称进行简单的解释。">
+<meta name="keywords" content="Java">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Mac修改MySQL的字符编码">
-<meta property="og:url" content="http://victorzhong.github.io/2017/08/25/Mac修改MySQL的字符编码/index.html">
+<meta property="og:title" content="Java中的锁">
+<meta property="og:url" content="http://victorzhong.github.io/2018/01/22/Java中的锁/index.html">
 <meta property="og:site_name" content="Victor&#39;s Sketch">
-<meta property="og:description" content="查看数据库编码： 1show variables like &apos;char%&apos;;">
+<meta property="og:description" content="并发编程一定绕不过锁，锁作为共享数据并保持其一致性的工具，在Java中可用synchronized、ReentrantLock实现。常见的锁的名称有公平锁/非公平锁、独享锁/共享锁、互斥锁/读写锁、乐观锁/悲观锁、偏向锁/轻量级锁/重量级锁、自旋锁等等，这些名称并不一定代表一个独立的分类，有的指锁的状态，有的指锁的特性。本文对每个名称进行简单的解释。">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://victorzhong.github.io/uploads/2017082501.png">
-<meta property="og:updated_time" content="2018-01-06T17:58:28.951Z">
+<meta property="og:updated_time" content="2018-01-22T15:36:48.712Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Mac修改MySQL的字符编码">
-<meta name="twitter:description" content="查看数据库编码： 1show variables like &apos;char%&apos;;">
-<meta name="twitter:image" content="http://victorzhong.github.io/uploads/2017082501.png">
+<meta name="twitter:title" content="Java中的锁">
+<meta name="twitter:description" content="并发编程一定绕不过锁，锁作为共享数据并保持其一致性的工具，在Java中可用synchronized、ReentrantLock实现。常见的锁的名称有公平锁/非公平锁、独享锁/共享锁、互斥锁/读写锁、乐观锁/悲观锁、偏向锁/轻量级锁/重量级锁、自旋锁等等，这些名称并不一定代表一个独立的分类，有的指锁的状态，有的指锁的特性。本文对每个名称进行简单的解释。">
 
 
 
@@ -136,13 +134,13 @@
 
 
 
-  <link rel="canonical" href="http://victorzhong.github.io/2017/08/25/Mac修改MySQL的字符编码/"/>
+  <link rel="canonical" href="http://victorzhong.github.io/2018/01/22/Java中的锁/"/>
 
 
 
 
 
-  <title>Mac修改MySQL的字符编码 | Victor's Sketch</title>
+  <title>Java中的锁 | Victor's Sketch</title>
   
 
 
@@ -309,7 +307,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://victorzhong.github.io/2017/08/25/Mac修改MySQL的字符编码/">
+    <link itemprop="mainEntityOfPage" href="http://victorzhong.github.io/2018/01/22/Java中的锁/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Victor Chung">
@@ -326,7 +324,7 @@
 
         
         
-          <h2 class="post-title" itemprop="name headline">Mac修改MySQL的字符编码</h2>
+          <h2 class="post-title" itemprop="name headline">Java中的锁</h2>
         
 
         <div class="post-meta">
@@ -338,8 +336,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-08-25T22:38:45+08:00">
-                2017-08-25
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-22T23:04:39+08:00">
+                2018-01-22
               </time>
             
 
@@ -361,19 +359,8 @@
               
               
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mac/" itemprop="url" rel="index">
-                    <span itemprop="name">Mac</span>
-                  </a>
-                </span>
-
-                
-                
-                  ， 
-                
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/Mac/Database/" itemprop="url" rel="index">
-                    <span itemprop="name">Database</span>
+                  <a href="/categories/Java/" itemprop="url" rel="index">
+                    <span itemprop="name">Java</span>
                   </a>
                 </span>
 
@@ -409,14 +396,22 @@
       
 
       
-        <p>查看数据库编码：</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">show variables like 'char%';</span><br></pre></td></tr></table></figure>
+        <p>并发编程一定绕不过锁，锁作为共享数据并保持其一致性的工具，在Java中可用<code>synchronized</code>、<code>ReentrantLock</code>实现。常见的锁的名称有公平锁/非公平锁、独享锁/共享锁、互斥锁/读写锁、乐观锁/悲观锁、偏向锁/轻量级锁/重量级锁、自旋锁等等，这些名称并不一定代表一个独立的分类，有的指锁的状态，有的指锁的特性。本文对每个名称进行简单的解释。</p>
 <a id="more"></a>
-<p><img src="/uploads/2017082501.png" alt="数据库编码.png"></p>
-<p>关闭MySQL进程，进入/etc，查看是否有my.cnf文件，如果没有则创建之（注：需要root权限）。</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"># dvice on how to change settings please see</span><br><span class="line"># http://dev.mysql.com/doc/refman/5.7/en/server-configuration-defaults.html</span><br><span class="line"># *** DO NOT EDIT THIS FILE. It&apos;s a template which will be copied to the</span><br><span class="line"># *** default location during install, and will be replaced if you</span><br><span class="line"># *** upgrade to a newer version of MySQL.</span><br><span class="line"></span><br><span class="line">#更改数据库编码需要更改的</span><br><span class="line">[mysqld]</span><br><span class="line">character-set-server=utf8</span><br><span class="line"></span><br><span class="line">#备份数据库需要更改的</span><br><span class="line">[mysqldump]</span><br><span class="line">user=root</span><br><span class="line">password=123456</span><br><span class="line"></span><br><span class="line"># Remove leading # and set to the amount of RAM for the most important data</span><br><span class="line"># cache in MySQL. Start at 70% of total RAM for dedicated server, else 10%.</span><br><span class="line"># innodb_buffer_pool_size = 128M</span><br><span class="line"></span><br><span class="line"># Remove leading # to turn on a very important data integrity option: logging</span><br><span class="line"># changes to the binary log between backups.</span><br><span class="line"># log_bin</span><br><span class="line"></span><br><span class="line"># These are commonly set, remove the # and set as required.</span><br><span class="line"># basedir = .....</span><br><span class="line"># datadir = .....</span><br><span class="line"># port = .....</span><br><span class="line"># server_id = .....</span><br><span class="line"># socket = .....</span><br><span class="line"></span><br><span class="line"># Remove leading # to set options mainly useful for reporting servers.</span><br><span class="line"># The server defaults are faster for transactions and fast SELECTs.</span><br><span class="line"># Adjust sizes as needed, experiment to find the optimal values.</span><br><span class="line"># join_buffer_size = 128M</span><br><span class="line"># sort_buffer_size = 2M</span><br><span class="line"># read_rnd_buffer_size = 2M</span><br><span class="line"></span><br><span class="line">sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES</span><br></pre></td></tr></table></figure>
-<p>将以上内容复制进my.cnf，保存，启动MySQL，再查看一下编码：</p>
-<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">mysql&gt; show variables like &apos;char%&apos;;</span><br><span class="line">+--------------------------+-----------------------------------------------------------+</span><br><span class="line">| Variable_name            | Value                                                     |</span><br><span class="line">+--------------------------+-----------------------------------------------------------+</span><br><span class="line">| character_set_client     | utf8                                                      |</span><br><span class="line">| character_set_connection | utf8                                                      |</span><br><span class="line">| character_set_database   | utf8                                                      |</span><br><span class="line">| character_set_filesystem | binary                                                    |</span><br><span class="line">| character_set_results    | utf8                                                      |</span><br><span class="line">| character_set_server     | utf8                                                      |</span><br><span class="line">| character_set_system     | utf8                                                      |</span><br><span class="line">| character_sets_dir       | /usr/local/mysql-5.7.19-macos10.12-x86_64/share/charsets/ |</span><br><span class="line">+--------------------------+-----------------------------------------------------------+</span><br><span class="line">8 rows in set (0.01 sec)</span><br></pre></td></tr></table></figure>
+<h2 id="公平锁-非公平锁"><a href="#公平锁-非公平锁" class="headerlink" title="公平锁/非公平锁"></a>公平锁/非公平锁</h2><p><strong>公平锁</strong>是指多个线程按照申请锁的顺序来获取锁。<br><strong>非公平锁</strong>是指多个线程获取锁的顺序并不是按照申请锁的顺序，有可能后申请的线程比先申请的线程优先获取锁。此类锁优点在于吞吐量比公平锁大，但有可能会造成优先级反转或者饥饿现象。<br><code>Java ReentrantLock</code>通过构造函数指定该锁是否是公平锁，默认是非公平锁。<br><code>synchronized</code>也是一种非公平锁。由于其并不像<code>ReentrantLock</code>是通过<a href="http://blog.csdn.net/vernonzheng/article/details/8275624" target="_blank" rel="noopener">AQS</a>的来实现线程调度，所以并没有任何办法使其变成公平锁。</p>
+<h2 id="可重入锁（递归锁）"><a href="#可重入锁（递归锁）" class="headerlink" title="可重入锁（递归锁）"></a>可重入锁（递归锁）</h2><p><strong>可重入锁</strong>又名递归锁，是指在同一个线程在外层方法获取锁的时候，在进入内层方法会自动获取锁。这种锁可以在一定程度上避免死锁。<br>从<code>ReentrantLock</code>的名字——“Re-entrant-Lock”就可以看出这是一个可重入锁，<code>synchronized</code>也是一个可重入锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setA</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">    setB();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">setB</span><span class="params">()</span> <span class="keyword">throws</span> Exception</span>&#123;</span><br><span class="line">    Thread.sleep(<span class="number">1000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面的代码展示了可重入锁的一个特点，如果不是可重入锁的话，<code>setB()</code>可能不会被当前线程执行，可能造成死锁。</p>
+<h2 id="独享锁-共享锁"><a href="#独享锁-共享锁" class="headerlink" title="独享锁/共享锁"></a>独享锁/共享锁</h2><p><strong>独享锁</strong>是指该锁一次只能被一个线程所持有。<br><strong>共享锁</strong>是指该锁可被多个线程所持有。<br><code>ReentrantLock</code>是独享锁。但是对于Lock的另一个实现类<code>ReadWriteLock</code>，其读锁是共享锁，其写锁是独享锁。<br>读锁的共享锁可保证并发读是非常高效的，读写，写读 ，写写的过程是互斥的。<br>独享锁与共享锁也是通过AQS来实现的，通过实现不同的方法，来实现独享或者共享。<br><code>synchronized</code>显然是独享锁。</p>
+<h2 id="互斥锁-读写锁"><a href="#互斥锁-读写锁" class="headerlink" title="互斥锁/读写锁"></a>互斥锁/读写锁</h2><p>上面讲的独享锁/共享锁就是一种广义的说法，互斥锁/读写锁就是具体的实现。<br>互斥锁在Java中的具体实现就是<code>ReentrantLock</code>，读写锁在Java中的具体实现就是<code>ReadWriteLock</code>。</p>
+<h2 id="乐观锁-悲观锁"><a href="#乐观锁-悲观锁" class="headerlink" title="乐观锁/悲观锁"></a>乐观锁/悲观锁</h2><p>乐观锁与悲观锁不是指具体的什么类型的锁，而是指看待并发同步的角度。<br><strong>悲观锁</strong>认为对于同一个数据的并发操作，一定是会发生修改的，哪怕没有修改，也会认为修改。因此对于同一个数据的并发操作，悲观锁采取加锁的形式。悲观的认为，不加锁的并发操作一定会出问题。<br><strong>乐观锁</strong>则认为对于同一个数据的并发操作，是不会发生修改的。在更新数据的时候，会采用尝试更新，不断重新的方式更新数据。乐观的认为，不加锁的并发操作是没有事情的。<br>从上面的描述我们可以看出，悲观锁适合写操作非常多的场景，乐观锁适合读操作非常多的场景，不加锁会带来大量的性能提升。<br>悲观锁在Java中的使用，就是利用各种锁。<br>乐观锁在Java中的使用，是无锁编程，常常采用的是CAS算法，典型的例子就是原子类，通过CAS自旋实现原子操作的更新。</p>
+<h2 id="分段锁"><a href="#分段锁" class="headerlink" title="分段锁"></a>分段锁</h2><p><strong>分段锁</strong>其实是一种锁的设计，并不是具体的一种锁，对于<code>ConcurrentHashMap</code>而言，其并发的实现就是通过分段锁的形式来实现高效的并发操作。<br>我们以ConcurrentHashMap来说一下分段锁的含义以及设计思想，ConcurrentHashMap中的分段锁称为Segment，它即类似于HashMap（JDK7与JDK8中HashMap的实现）的结构，即内部拥有一个Entry数组，数组中的每个元素又是一个链表；同时又是一个ReentrantLock（Segment继承了ReentrantLock)。<br>当需要put元素的时候，并不是对整个hashmap进行加锁，而是先通过hashcode来知道他要放在那一个分段中，然后对这个分段进行加锁，所以当多线程put的时候，只要不是放在一个分段中，就实现了真正的并行的插入。<br>但是，在统计size的时候，可就是获取hashmap全局信息的时候，就需要获取所有的分段锁才能统计。<br>分段锁的设计目的是细化锁的粒度，当操作不需要更新整个数组的时候，就仅仅针对数组中的一项进行加锁操作。</p>
+<h2 id="偏向锁-轻量级锁-重量级锁"><a href="#偏向锁-轻量级锁-重量级锁" class="headerlink" title="偏向锁/轻量级锁/重量级锁"></a>偏向锁/轻量级锁/重量级锁</h2><p>这三种锁是指锁的状态，并且是针对<code>synchronized</code>。在Java 5通过引入锁升级的机制来实现高效<code>synchronized</code>。这三种锁的状态是通过对象监视器在对象头中的字段来表明的。<br><strong>偏向锁</strong>是指一段同步代码一直被一个线程所访问，那么该线程会自动获取锁。降低获取锁的代价。<br><strong>轻量级锁</strong>是指当锁是偏向锁的时候，被另一个线程所访问，偏向锁就会升级为轻量级锁，其他线程会通过自旋的形式尝试获取锁，不会阻塞，提高性能。<br><strong>重量级锁</strong>是指当锁为轻量级锁的时候，另一个线程虽然是自旋，但自旋不会一直持续下去，当自旋一定次数的时候，还没有获取到锁，就会进入阻塞，该锁膨胀为重量级锁。重量级锁会让其他申请的线程进入阻塞，性能降低。</p>
+<h2 id="自旋锁"><a href="#自旋锁" class="headerlink" title="自旋锁"></a>自旋锁</h2><p>在Java中，<strong>自旋锁</strong>是指尝试获取锁的线程不会立即阻塞，而是采用循环的方式去尝试获取锁，这样的好处是减少线程上下文切换的消耗，缺点是循环会消耗CPU。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SpinLock</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> AtomicReference&lt;Thread&gt; sign =<span class="keyword">new</span> AtomicReference&lt;&gt;();</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">lock</span><span class="params">()</span></span>&#123;</span><br><span class="line">    Thread current = Thread.currentThread();</span><br><span class="line">    <span class="keyword">while</span>(!sign .compareAndSet(<span class="keyword">null</span>, current))&#123;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">unlock</span> <span class="params">()</span></span>&#123;</span><br><span class="line">    Thread current = Thread.currentThread();</span><br><span class="line">    sign .compareAndSet(current, <span class="keyword">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用了CAS原子操作，lock函数将owner设置为当前线程，并且预测原来的值为空。unlock函数将owner设置为null，并且预测值为当前线程。</p>
+<p>当有第二个线程调用lock操作时由于owner值不为空，导致循环一直被执行，直至第一个线程调用unlock函数将owner设置为null，第二个线程才能进入临界区。</p>
+<p>由于自旋锁只是将当前线程不停地执行循环体，不进行线程状态的改变，所以响应速度更快。但当线程数不停增加时，性能下降明显，因为每个线程都需要执行，占用CPU时间。如果线程竞争不激烈，并且保持锁的时间段。适合使用自旋锁。</p>
 
       
     </div>
@@ -434,11 +429,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/Mac/" rel="tag"># Mac</a>
-          
-            <a href="/tags/Database/" rel="tag"># Database</a>
-          
-            <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+            <a href="/tags/Java/" rel="tag"># Java</a>
           
         </div>
       
@@ -451,8 +442,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2017/08/06/Python基础/" rel="next" title="Python基础">
-                <i class="fa fa-chevron-left"></i> Python基础
+              <a href="/2018/01/07/CS231n笔记（一）图像分类/" rel="next" title="CS231n笔记（一）图像分类">
+                <i class="fa fa-chevron-left"></i> CS231n笔记（一）图像分类
               </a>
             
           </div>
@@ -460,10 +451,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2017/09/11/Mac安装Redis/" rel="prev" title="Mac安装Redis">
-                Mac安装Redis <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -515,8 +502,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview sidebar-panel sidebar-panel-active">
+      <section class="site-overview sidebar-panel">
         <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
           <img class="site-author-image" itemprop="image"
                src="/uploads/avatar.png"
@@ -591,6 +587,22 @@
 
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#公平锁-非公平锁"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x516C;&#x5E73;&#x9501;-&#x975E;&#x516C;&#x5E73;&#x9501;" class="headerlink" title="&#x516C;&#x5E73;&#x9501;/&#x975E;&#x516C;&#x5E73;&#x9501;"></a>&#x516C;&#x5E73;&#x9501;/&#x975E;&#x516C;&#x5E73;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可重入锁（递归锁）"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;" class="headerlink" title="&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;"></a>&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#独享锁-共享锁"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x72EC;&#x4EAB;&#x9501;-&#x5171;&#x4EAB;&#x9501;" class="headerlink" title="&#x72EC;&#x4EAB;&#x9501;/&#x5171;&#x4EAB;&#x9501;"></a>&#x72EC;&#x4EAB;&#x9501;/&#x5171;&#x4EAB;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互斥锁-读写锁"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x4E92;&#x65A5;&#x9501;-&#x8BFB;&#x5199;&#x9501;" class="headerlink" title="&#x4E92;&#x65A5;&#x9501;/&#x8BFB;&#x5199;&#x9501;"></a>&#x4E92;&#x65A5;&#x9501;/&#x8BFB;&#x5199;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乐观锁-悲观锁"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x4E50;&#x89C2;&#x9501;-&#x60B2;&#x89C2;&#x9501;" class="headerlink" title="&#x4E50;&#x89C2;&#x9501;/&#x60B2;&#x89C2;&#x9501;"></a>&#x4E50;&#x89C2;&#x9501;/&#x60B2;&#x89C2;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段锁"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x5206;&#x6BB5;&#x9501;" class="headerlink" title="&#x5206;&#x6BB5;&#x9501;"></a>&#x5206;&#x6BB5;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁-轻量级锁-重量级锁"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x504F;&#x5411;&#x9501;-&#x8F7B;&#x91CF;&#x7EA7;&#x9501;-&#x91CD;&#x91CF;&#x7EA7;&#x9501;" class="headerlink" title="&#x504F;&#x5411;&#x9501;/&#x8F7B;&#x91CF;&#x7EA7;&#x9501;/&#x91CD;&#x91CF;&#x7EA7;&#x9501;"></a>&#x504F;&#x5411;&#x9501;/&#x8F7B;&#x91CF;&#x7EA7;&#x9501;/&#x91CD;&#x91CF;&#x7EA7;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自旋锁"><span class="nav-number">8.</span> <span class="nav-text"><a href="#&#x81EA;&#x65CB;&#x9501;" class="headerlink" title="&#x81EA;&#x65CB;&#x9501;"></a>&#x81EA;&#x65CB;&#x9501;</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
