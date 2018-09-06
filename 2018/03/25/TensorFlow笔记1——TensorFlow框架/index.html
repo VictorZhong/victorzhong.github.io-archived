@@ -7,7 +7,7 @@
 
 <html class="theme-next pisces use-motion" lang="zh-Hans">
 <head>
-  <meta charset="UTF-8"/>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
 <meta http-equiv="X-UA-Compatible" content="IE=edge" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
 <meta name="theme-color" content="#222">
@@ -94,22 +94,22 @@
 
 
 
-<meta name="description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：用张量表示数据、用计算图搭建NN、用Session执行计算图、优化线上权重参数、得到模型。">
+<meta name="description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：  用张量表示数据 用计算图搭建NN 用Session执行计算图 优化线上权重参数 得到模型">
 <meta name="keywords" content="Machine Learning,TensorFlow">
 <meta property="og:type" content="article">
 <meta property="og:title" content="TensorFlow笔记1——TensorFlow框架">
 <meta property="og:url" content="http://victorzhong.github.io/2018/03/25/TensorFlow笔记1——TensorFlow框架/index.html">
 <meta property="og:site_name" content="Victor&#39;s Sketch">
-<meta property="og:description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：用张量表示数据、用计算图搭建NN、用Session执行计算图、优化线上权重参数、得到模型。">
+<meta property="og:description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：  用张量表示数据 用计算图搭建NN 用Session执行计算图 优化线上权重参数 得到模型">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://victorzhong.github.io/uploads/2018032501.png">
 <meta property="og:image" content="http://victorzhong.github.io/uploads/2018032502.png">
 <meta property="og:image" content="http://victorzhong.github.io/uploads/2018032503.png">
 <meta property="og:image" content="http://victorzhong.github.io/uploads/2018032504.png">
-<meta property="og:updated_time" content="2018-09-01T10:57:04.769Z">
+<meta property="og:updated_time" content="2018-09-06T14:14:27.717Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="TensorFlow笔记1——TensorFlow框架">
-<meta name="twitter:description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：用张量表示数据、用计算图搭建NN、用Session执行计算图、优化线上权重参数、得到模型。">
+<meta name="twitter:description" content="基于TensorFlow搭建神经网络（Neural Network）的主要流程有：  用张量表示数据 用计算图搭建NN 用Session执行计算图 优化线上权重参数 得到模型">
 <meta name="twitter:image" content="http://victorzhong.github.io/uploads/2018032501.png">
 
 
@@ -145,7 +145,7 @@
 
 
 
-  <title>TensorFlow笔记1——TensorFlow框架 | Victor's Sketch</title>
+  <title>TensorFlow笔记1——TensorFlow框架 | Victor's Sketch</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
   
 
 
@@ -170,7 +170,7 @@
     
   
 
-  <div class="container sidebar-position-left page-post-detail ">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -401,11 +401,19 @@
       
 
       
-        <p>基于TensorFlow搭建神经网络（Neural Network）的主要流程有：用张量表示数据、用计算图搭建NN、用Session执行计算图、优化线上权重参数、得到模型。</p>
+        <p>基于TensorFlow搭建神经网络（Neural Network）的主要流程有：</p>
+<ol>
+<li>用张量表示数据</li>
+<li>用计算图搭建NN</li>
+<li>用Session执行计算图</li>
+<li>优化线上权重参数</li>
+<li>得到模型</li>
+</ol>
 <a id="more"></a>
 <h2 id="基本概念"><a href="#基本概念" class="headerlink" title="基本概念"></a>基本概念</h2><h3 id="张量-Tensor-：多维数组-列表-，用“阶”表示其维度。"><a href="#张量-Tensor-：多维数组-列表-，用“阶”表示其维度。" class="headerlink" title="张量(Tensor)：多维数组(列表)，用“阶”表示其维度。"></a>张量(Tensor)：多维数组(列表)，用“阶”表示其维度。</h3><p>0阶张量称为<strong>标量</strong>，表示一个常数，如S=123。<br>1阶张量称为<strong>向量</strong>，表示一个一维数组，如V=[1,2,3]。<br>2阶张量称为<strong>矩阵</strong>，表示一个二维数组，可以有i行j列个元素，每个元素可由i、j索引到，如M=[[1,2,3],[4,5,6],[7,8,9]]。<br><strong>计算张量的维度</strong> 最简单直观的方法是数最右的方括号]的数量，有多少个就是几阶的。</p>
-<h3 id="计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点，只搭建，不计算。"><a href="#计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点，只搭建，不计算。" class="headerlink" title="计算图(Graph)：搭建NN的计算过程，承载一个或多个计算节点，只搭建，不计算。"></a>计算图(Graph)：搭建NN的计算过程，承载一个或多个计算节点，只搭建，不计算。</h3><p>神经网络的基本模型是神经元，而神经元的基本模型其实就是乘、加运算。我们搭建下面的计算图：<br><img src="/uploads/2018032501.png" alt="计算图示例"></p>
-<p>$X_1$、$X_2$ 表示输入，$W_1$、$W_2$分别为$X_1$、$X_2$到y的权重，那么<br>$$ y = X_1 <em> W_1 + X_2 </em> W_2 $$<br>用TF实行的代码如下：</p>
+<h3 id="计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点（只搭建，不计算）"><a href="#计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点（只搭建，不计算）" class="headerlink" title="计算图(Graph)：搭建NN的计算过程，承载一个或多个计算节点（只搭建，不计算）"></a>计算图(Graph)：搭建NN的计算过程，承载一个或多个计算节点（只搭建，不计算）</h3><p>神经网络的基本模型是神经元，而神经元的基本模型其实就是乘、加运算，比如下图就是一个神经元。</p>
+<p><img src="/uploads/2018032501.png" alt="计算图示例"></p>
+<p>$X_1$、$X_2$ 表示输入，$W_1$、$W_2$分别为$X_1$、$X_2$到y的权重，那么<br>$$y=X_1*W_1+X_2*W_2$$<br>用TF实行的代码如下：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line">x = tf.constant([[<span class="number">1.0</span>, <span class="number">2.0</span>]])		<span class="comment">#定义2阶张量[[1.0, 2.0]]</span></span><br><span class="line">w = tf.constant([[<span class="number">3.0</span>], [<span class="number">4.0</span>]])		<span class="comment">#定义2阶张量[[3.0], [4.0]]</span></span><br><span class="line">y = tf.matmul(x, w)					<span class="comment">#实现XW矩阵相乘</span></span><br><span class="line"><span class="keyword">print</span> y</span><br></pre></td></tr></table></figure>
 <p>可以看到控制台输出了<code>Tensor(“matmul:0”, shape(1,1), dtype=float32)</code>，其中<code>“matmul:0”</code>是张量名，<code>shape(1,1)</code>表示1行1列，<code>dtype=float32)</code>说明数据类型为float32。<br>这里输出的y张量只是一个计算过程，并不是计算结果。计算结果的获取需要通过Session执行。</p>
 <h3 id="会话-Session-：执行计算图的节点。"><a href="#会话-Session-：执行计算图的节点。" class="headerlink" title="会话(Session)：执行计算图的节点。"></a>会话(Session)：执行计算图的节点。</h3><p>在TF中用<code>with</code>结构实现，语法如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">	<span class="keyword">print</span> sess.run(y)</span><br></pre></td></tr></table></figure></p>
@@ -468,28 +476,30 @@
 <li>使用训练好的模型预测和分类</li>
 </ol>
 <p>通过第1至3步的循环迭代训练，可以不断优化参数。而参数优化一旦完成，此神经网络便可投入具体的应用了。</p>
-<p>很多实际应用中，我们会先使用现有的成熟网络结构，喂入新的数据，训练相应 模型，判断是否能对喂入的从未见过的新数据作出正确响应，再适当更改网络结 构，反复迭代，让机器自动训练参数找出最优结构和参数，以固定专用模型。</p>
+<p>很多实际应用中，我们会先使用现有的成熟网络结构，喂入新的数据，训练相应的模型，判断是否能对喂入的从未见过的新数据作出正确响应，再适当更改网络结构，反复迭代，让机器自动训练参数找出最优结构和参数，以固定专用模型。</p>
 <h3 id="前向传播"><a href="#前向传播" class="headerlink" title="前向传播"></a>前向传播</h3><p>前向传播就是搭建NN的计算过程，让模型具有推理能力，能针对一组输入给出相应的输出。<br>举个例子：<br>假如生产一批零件，体积为 $X_1$，重量为  $X_2$，体积和重量就是我们选择的特征， 把它们喂入神经网络，当体积和重量这组数据走过神经网络后会得到一个输出。</p>
 <p><img src="/uploads/2018032502.png" alt="零件生产计算图"></p>
-<p>假如输入的特征值是：体积 0.7，重量 0.5，由以上计算图，隐藏层节点$ a_{11}=X<em>1* W</em>{1,1}^{(1)}+X<em>2*W</em>{2,1}^{(1)}=0.14+0.15=0.29 $，同理算得节点 $a<em>{12} =0.32 $，$ a</em>{13}=0.38 $，最终计算得到输出层 Y=-0.015，这便实现了<strong>前向传播过程</strong>。</p>
+<p>假如输入的特征值是：体积 0.7，重量 0.5，由以上计算图，隐藏层节点 <span>$a_{11} = X_1 * W_{1,1}^{(1)} + X_2 * W_{2,1}^{(1)} = 0.14 + 0.15 = 0.29$</span><!-- Has MathJax -->，</p>
+<p>同理算得节点 <span>$a_{12} = 0.32$</span><!-- Has MathJax --> ， <span>$a_{13} = 0.38$</span><!-- Has MathJax --> ，<br>最终计算得到输出层 Y=-0.015，这便实现了<strong>前向传播过程</strong>。</p>
 <p>具体推导过程如下：</p>
-<ol>
-<li>$X$ 表示输入。</li>
-</ol>
+<p>1） $X$ 表示输入。</p>
 <p>在此例中是1行2列矩阵，表示一次输入一组特征，包含体积和重量两个元素。</p>
-<ol>
-<li>$W_{前节点编号,后节点编号}^{(层数)}$ 为待优化的权重参数。</li>
-</ol>
-<p>对于第一层的W前面有两个节点，后面有三个节点，所以W是个2行3列的矩阵，可以这样表示：<br>$$<br>W^{(1)}=\begin{bmatrix}<br>    W<em>{1,1}^{(1)} &amp; W</em>{1,2}^{(1)} &amp; W<em>{1,3}^{(1)} \<br>    W</em>{2,1}^{(1)} &amp; W<em>{2,2}^{(1)} &amp; W</em>{2,3}^{(1)} \<br>    \end{bmatrix}<br>$$</p>
-<p>而对于第二层的W，前面有三个节点，后面有一个节点，所以W是个3行1列的矩阵，表示为：<br>$$W^{(2)}=\begin{bmatrix}<br>    W<em>{1,1}^{(2)}  \<br>    W</em>{2,1}^{(2)}  \<br>    W_{3,1}^{(2)}  \<br>    \end{bmatrix} $$</p>
-<ol>
-<li><p>神经网络的层数指的都是计算层，输入层不是计算层。所以第一层为$a$，是一个1行3列的矩阵：<br>$$a=\begin{bmatrix}</p>
-<pre><code>a_{11} &amp; a_{12} &amp; a_{13} \\
-\end{bmatrix}=XW^{(1)} $$
-</code></pre></li>
-<li><p>由以上，$Y=aW^{(2)}$。</p>
-</li>
-</ol>
+<p>2） $W_{前节点编号,后节点编号}^{(层数)}$ 为待优化的权重参数。</p>
+<p>对于第一层的W前面有两个节点，后面有三个节点，所以W是个2行3列的矩阵，可以这样表示：<br><span>$$W^{(1)} = 
+\begin{bmatrix}
+  W_{1,1}^{(1)} &amp; W_{1,2}^{(1)} &amp; W_{1,3}^{(1)} \\
+  W_{2,1}^{(1)} &amp; W_{2,2}^{(1)} &amp; W_{2,3}^{(1)} \\
+\end{bmatrix}$$</span><!-- Has MathJax --></p>
+<p>而对于第二层的W，前面有三个节点，后面有一个节点，所以W是个3行1列的矩阵，表示为：<br><span>$$W^{(2)}=
+\begin{bmatrix}
+&Tab;W_{1,1}^{(2)}  \\
+&Tab;W_{2,1}^{(2)}  \\
+&Tab;W_{3,1}^{(2)}  \\
+\end{bmatrix}$$</span><!-- Has MathJax --></p>
+<p>3） 神经网络的层数指的都是计算层，输入层不是计算层。所以第一层为$a$，是一个1行3列的矩阵：<br><span>$$a=\begin{bmatrix}
+       a_{11} &amp; a_{12} &amp; a_{13} \\
+       \end{bmatrix}=XW^{(1)}$$</span><!-- Has MathJax --></p>
+<p>4) 由以上，$Y=aW^{(2)}$。</p>
 <h3 id="前向传播TensorFlow描述"><a href="#前向传播TensorFlow描述" class="headerlink" title="前向传播TensorFlow描述"></a>前向传播TensorFlow描述</h3><p>我们先来一波简单的：</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="comment"># 两层简单神经网络（全连接）</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义输入和参数</span></span><br><span class="line">x = tf.constant([[<span class="number">0.7</span>, <span class="number">0.5</span>]])</span><br><span class="line">w1 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">3</span>], stddev=<span class="number">1</span>, seed=<span class="number">1</span>))</span><br><span class="line">w2 = tf.Variable(tf.random_normal([<span class="number">3</span>, <span class="number">1</span>], stddev=<span class="number">1</span>, seed=<span class="number">1</span>))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义前向传播过程</span></span><br><span class="line">a = tf.matmul(x, w1)</span><br><span class="line">y = tf.matmul(a, w2)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 用会话计算结果</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init_op = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init_op)</span><br><span class="line">    <span class="keyword">print</span> <span class="string">"y is:\n"</span>, sess.run(y)</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">y is:</span></span><br><span class="line"><span class="string">[[3.0904665]]</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
 <p>以上代码中，随机生成$w_1$和$w_2$时要注意前后节点数，<code>tf.global_variables_initializer()</code>方法对所有全局变量进行初始化，再调用<code>sess.run()</code>进行计算。</p>
@@ -498,7 +508,8 @@
 <h3 id="反向传播"><a href="#反向传播" class="headerlink" title="反向传播"></a>反向传播</h3><p>反向传播的过程是训练、优化模型参数，使 NN 模型在训练数据上的损失函数最小。</p>
 <h4 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h4><p><strong>损失函数(loss)</strong>是计算得到的预测值 y 与已知答案 y_ 的差距。常用的计算损失函数的方法有：</p>
 <ol>
-<li>均方误差MSE(Mean Squared Error)：求前向传播计算结果与已知答案之差的平方的和，再求平均。<br>$$MSE(y_ , y)=\frac {\sum<em>{i=1}^n(y-y\</em>)^2}{n}$$<br>用TF描述为：<code>loss_mse = tf.reduce_mean(tf.square(y_ - y))</code></li>
+<li>均方误差MSE(Mean Squared Error)：求前向传播计算结果与已知答案之差的平方的和，再求平均。<span>$MSE(y\_ , y)=\frac {\sum_{i=1}^n(y-y\_)^2}{n}$</span><!-- Has MathJax -->
+用TF描述为：<code>loss_mse = tf.reduce_mean(tf.square(y_ - y))</code></li>
 <li>自定义损失函数</li>
 <li>交差熵CE(Cross Entropy)</li>
 </ol>
@@ -508,22 +519,14 @@
 <li><code>train_step=tf.train.MomentumOptimizer(learning_rate, momentum).minimize(loss)</code></li>
 <li><code>train_step=tf.train.AdamOptimizer(learning_rate).minimize(loss)</code></li>
 </ul>
-<p>三种优化方法区别如下:</p>
-<ol>
-<li>梯度下降会使参数沿着梯度的反方向，即总损失减小的方向移动，实现更新参数，如下图所示。</li>
-</ol>
+<p>三种优化方法区别如下:<br>1） 梯度下降会使参数沿着梯度的反方向，即总损失减小的方向移动，实现更新参数，如下图所示。</p>
 <p><img src="/uploads/2018032503.png" alt="计算图示例"><br>参数的更新公式为：<br><img src="/uploads/2018032504.png" alt="梯度下降"></p>
 <p>其中，𝐽(𝜃)为损失函数，𝜃为参数，𝛼为学习率。</p>
-<ol>
-<li><p>Momentum优化器在更新参数时，利用了超参数，参数更新公式是：</p>
-<p>$$d<em>i = \beta d</em>{i-1} + g(\theta_{i-1})$$</p>
-<p>$$\theta<em>i = \theta</em>{i-1}-\alpha d_i $$</p>
-</li>
-</ol>
-<p>其中，𝛼为学习率，超参数为𝛽，𝜃为参数，$g(\theta_{i-1})$为损失函数的梯度。</p>
-<ol>
-<li>Adam优化器是利用自适应学习率的优化算法，Adam 算法和随机梯度下降算法不同的是随机梯度下降算法保持单一的学习率更新所有的参数，学习率在训练过程中并不会改变；而 Adam 算法通过计算梯度的一阶矩估计和二 阶矩估计而为不同的参数设计独立的自适应性学习率。</li>
-</ol>
+<p>2） Momentum优化器在更新参数时，利用了超参数，参数更新公式是：</p>
+   <span>$d_i = \beta d_{i-1} + g(\theta_{i-1})$</span><!-- Has MathJax -->
+   <span>$\theta_i = \theta_{i-1}-\alpha d_i$</span><!-- Has MathJax -->
+<p>其中，𝛼为学习率，超参数为𝛽，𝜃为参数，<span>$g(\theta_{i-1})$</span><!-- Has MathJax -->为损失函数的梯度。</p>
+<p>3） Adam优化器是利用自适应学习率的优化算法，Adam 算法和随机梯度下降算法不同的是随机梯度下降算法保持单一的学习率更新所有的参数，学习率在训练过程中并不会改变；而 Adam 算法通过计算梯度的一阶矩估计和二阶矩估计而为不同的参数设计独立的自适应性学习率。</p>
 <h4 id="学习率"><a href="#学习率" class="headerlink" title="学习率"></a>学习率</h4><p><strong>学习率</strong>决定了每次参数更新的幅度。优化器中都需要一个叫做学习率的参数，使用时，如果学习率选择过大会出现震 荡不收敛的情况，如果学习率选择过小，会出现收敛速度慢的情况。我们可以选 个比较小的值填入，比如 0.01、0.001。</p>
 <h2 id="搭建NN的八股"><a href="#搭建NN的八股" class="headerlink" title="搭建NN的八股"></a>搭建NN的八股</h2><p>经过前面的梳理，可以总结出搭建NN的四个主要步骤：准备工作、 前向传播、反向传播和循环迭代。TF的框架如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 搭建NN的框架</span></span><br><span class="line"><span class="comment"># 0.导入模块，生成模拟数据集;</span></span><br><span class="line"><span class="keyword">import</span> 常量定义 生成数据集</span><br><span class="line"><span class="comment"># 1.前向传播:定义输入、参数和输出 x= y_=</span></span><br><span class="line">x=</span><br><span class="line">y_=</span><br><span class="line">w1= </span><br><span class="line">w2=</span><br><span class="line">a= </span><br><span class="line">y=</span><br><span class="line"><span class="comment"># 2. 反向传播:定义损失函数、反向传播方法</span></span><br><span class="line">loss=</span><br><span class="line">train_step= </span><br><span class="line"><span class="comment"># 3. 生成会话，训练 STEPS 轮</span></span><br><span class="line"><span class="keyword">with</span> tf.session() <span class="keyword">as</span> sess</span><br><span class="line">	Init_op=tf.global_variables_initializer() </span><br><span class="line">	sess_run(init_op)</span><br><span class="line">	STEPS=<span class="number">3000</span></span><br><span class="line">	<span class="keyword">for</span> i <span class="keyword">in</span> range(STEPS):</span><br><span class="line">		start=</span><br><span class="line">		end=</span><br><span class="line">		sess.run(train_step, feed_dict:)</span><br></pre></td></tr></table></figure></p>
 <p>还是用前面的生产零件的例子来演示下这套八股。</p>
@@ -717,7 +720,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x57FA;&#x672C;&#x6982;&#x5FF5;" class="headerlink" title="&#x57FA;&#x672C;&#x6982;&#x5FF5;"></a>&#x57FA;&#x672C;&#x6982;&#x5FF5;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#张量-Tensor-：多维数组-列表-，用“阶”表示其维度。"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x5F20;&#x91CF;-Tensor-&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;-&#x5217;&#x8868;-&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;" class="headerlink" title="&#x5F20;&#x91CF;(Tensor)&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;(&#x5217;&#x8868;)&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;"></a>&#x5F20;&#x91CF;(Tensor)&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;(&#x5217;&#x8868;)&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点，只搭建，不计算。"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x8BA1;&#x7B97;&#x56FE;-Graph-&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF0C;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#x3002;" class="headerlink" title="&#x8BA1;&#x7B97;&#x56FE;(Graph)&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF0C;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#x3002;"></a>&#x8BA1;&#x7B97;&#x56FE;(Graph)&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF0C;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#x3002;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会话-Session-：执行计算图的节点。"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x4F1A;&#x8BDD;-Session-&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;" class="headerlink" title="&#x4F1A;&#x8BDD;(Session)&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;"></a>&#x4F1A;&#x8BDD;(Session)&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NN的参数"><span class="nav-number">2.</span> <span class="nav-text"><a href="#NN&#x7684;&#x53C2;&#x6570;" class="headerlink" title="NN&#x7684;&#x53C2;&#x6570;"></a>NN&#x7684;&#x53C2;&#x6570;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络实现过程"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;" class="headerlink" title="&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;"></a>&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前向传播"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x524D;&#x5411;&#x4F20;&#x64AD;" class="headerlink" title="&#x524D;&#x5411;&#x4F20;&#x64AD;"></a>&#x524D;&#x5411;&#x4F20;&#x64AD;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前向传播TensorFlow描述"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;" class="headerlink" title="&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;"></a>&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向传播"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x53CD;&#x5411;&#x4F20;&#x64AD;" class="headerlink" title="&#x53CD;&#x5411;&#x4F20;&#x64AD;"></a>&#x53CD;&#x5411;&#x4F20;&#x64AD;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#损失函数"><span class="nav-number">3.3.1.</span> <span class="nav-text"><a href="#&#x635F;&#x5931;&#x51FD;&#x6570;" class="headerlink" title="&#x635F;&#x5931;&#x51FD;&#x6570;"></a>&#x635F;&#x5931;&#x51FD;&#x6570;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反向传播的训练方法"><span class="nav-number">3.3.2.</span> <span class="nav-text"><a href="#&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;" class="headerlink" title="&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;"></a>&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#学习率"><span class="nav-number">3.3.3.</span> <span class="nav-text"><a href="#&#x5B66;&#x4E60;&#x7387;" class="headerlink" title="&#x5B66;&#x4E60;&#x7387;"></a>&#x5B66;&#x4E60;&#x7387;</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建NN的八股"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;" class="headerlink" title="&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;"></a>&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基本概念"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x57FA;&#x672C;&#x6982;&#x5FF5;" class="headerlink" title="&#x57FA;&#x672C;&#x6982;&#x5FF5;"></a>&#x57FA;&#x672C;&#x6982;&#x5FF5;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#张量-Tensor-：多维数组-列表-，用“阶”表示其维度。"><span class="nav-number">1.1.</span> <span class="nav-text"><a href="#&#x5F20;&#x91CF;-Tensor-&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;-&#x5217;&#x8868;-&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;" class="headerlink" title="&#x5F20;&#x91CF;(Tensor)&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;(&#x5217;&#x8868;)&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;"></a>&#x5F20;&#x91CF;(Tensor)&#xFF1A;&#x591A;&#x7EF4;&#x6570;&#x7EC4;(&#x5217;&#x8868;)&#xFF0C;&#x7528;&#x201C;&#x9636;&#x201D;&#x8868;&#x793A;&#x5176;&#x7EF4;&#x5EA6;&#x3002;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#计算图-Graph-：搭建NN的计算过程，承载一个或多个计算节点（只搭建，不计算）"><span class="nav-number">1.2.</span> <span class="nav-text"><a href="#&#x8BA1;&#x7B97;&#x56FE;-Graph-&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF08;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#xFF09;" class="headerlink" title="&#x8BA1;&#x7B97;&#x56FE;(Graph)&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF08;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#xFF09;"></a>&#x8BA1;&#x7B97;&#x56FE;(Graph)&#xFF1A;&#x642D;&#x5EFA;NN&#x7684;&#x8BA1;&#x7B97;&#x8FC7;&#x7A0B;&#xFF0C;&#x627F;&#x8F7D;&#x4E00;&#x4E2A;&#x6216;&#x591A;&#x4E2A;&#x8BA1;&#x7B97;&#x8282;&#x70B9;&#xFF08;&#x53EA;&#x642D;&#x5EFA;&#xFF0C;&#x4E0D;&#x8BA1;&#x7B97;&#xFF09;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#会话-Session-：执行计算图的节点。"><span class="nav-number">1.3.</span> <span class="nav-text"><a href="#&#x4F1A;&#x8BDD;-Session-&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;" class="headerlink" title="&#x4F1A;&#x8BDD;(Session)&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;"></a>&#x4F1A;&#x8BDD;(Session)&#xFF1A;&#x6267;&#x884C;&#x8BA1;&#x7B97;&#x56FE;&#x7684;&#x8282;&#x70B9;&#x3002;</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NN的参数"><span class="nav-number">2.</span> <span class="nav-text"><a href="#NN&#x7684;&#x53C2;&#x6570;" class="headerlink" title="NN&#x7684;&#x53C2;&#x6570;"></a>NN&#x7684;&#x53C2;&#x6570;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络实现过程"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;" class="headerlink" title="&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;"></a>&#x795E;&#x7ECF;&#x7F51;&#x7EDC;&#x5B9E;&#x73B0;&#x8FC7;&#x7A0B;</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前向传播"><span class="nav-number">3.1.</span> <span class="nav-text"><a href="#&#x524D;&#x5411;&#x4F20;&#x64AD;" class="headerlink" title="&#x524D;&#x5411;&#x4F20;&#x64AD;"></a>&#x524D;&#x5411;&#x4F20;&#x64AD;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#前向传播TensorFlow描述"><span class="nav-number">3.2.</span> <span class="nav-text"><a href="#&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;" class="headerlink" title="&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;"></a>&#x524D;&#x5411;&#x4F20;&#x64AD;TensorFlow&#x63CF;&#x8FF0;</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反向传播"><span class="nav-number">3.3.</span> <span class="nav-text"><a href="#&#x53CD;&#x5411;&#x4F20;&#x64AD;" class="headerlink" title="&#x53CD;&#x5411;&#x4F20;&#x64AD;"></a>&#x53CD;&#x5411;&#x4F20;&#x64AD;</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#损失函数"><span class="nav-number">3.3.1.</span> <span class="nav-text"><a href="#&#x635F;&#x5931;&#x51FD;&#x6570;" class="headerlink" title="&#x635F;&#x5931;&#x51FD;&#x6570;"></a>&#x635F;&#x5931;&#x51FD;&#x6570;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#反向传播的训练方法"><span class="nav-number">3.3.2.</span> <span class="nav-text"><a href="#&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;" class="headerlink" title="&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;"></a>&#x53CD;&#x5411;&#x4F20;&#x64AD;&#x7684;&#x8BAD;&#x7EC3;&#x65B9;&#x6CD5;</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#学习率"><span class="nav-number">3.3.3.</span> <span class="nav-text"><a href="#&#x5B66;&#x4E60;&#x7387;" class="headerlink" title="&#x5B66;&#x4E60;&#x7387;"></a>&#x5B66;&#x4E60;&#x7387;</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#搭建NN的八股"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;" class="headerlink" title="&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;"></a>&#x642D;&#x5EFA;NN&#x7684;&#x516B;&#x80A1;</span></a></li></ol></div>
             
 
           </div>
@@ -1231,7 +1234,24 @@
         }
       });
     </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config("");
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="custom_mathjax_source">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
   
 
 
