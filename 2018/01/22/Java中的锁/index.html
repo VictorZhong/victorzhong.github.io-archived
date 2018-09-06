@@ -601,7 +601,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#公平锁-非公平锁"><span class="nav-number">1.</span> <span class="nav-text"><a href="#&#x516C;&#x5E73;&#x9501;-&#x975E;&#x516C;&#x5E73;&#x9501;" class="headerlink" title="&#x516C;&#x5E73;&#x9501;/&#x975E;&#x516C;&#x5E73;&#x9501;"></a>&#x516C;&#x5E73;&#x9501;/&#x975E;&#x516C;&#x5E73;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可重入锁（递归锁）"><span class="nav-number">2.</span> <span class="nav-text"><a href="#&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;" class="headerlink" title="&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;"></a>&#x53EF;&#x91CD;&#x5165;&#x9501;&#xFF08;&#x9012;&#x5F52;&#x9501;&#xFF09;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#独享锁-共享锁"><span class="nav-number">3.</span> <span class="nav-text"><a href="#&#x72EC;&#x4EAB;&#x9501;-&#x5171;&#x4EAB;&#x9501;" class="headerlink" title="&#x72EC;&#x4EAB;&#x9501;/&#x5171;&#x4EAB;&#x9501;"></a>&#x72EC;&#x4EAB;&#x9501;/&#x5171;&#x4EAB;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互斥锁-读写锁"><span class="nav-number">4.</span> <span class="nav-text"><a href="#&#x4E92;&#x65A5;&#x9501;-&#x8BFB;&#x5199;&#x9501;" class="headerlink" title="&#x4E92;&#x65A5;&#x9501;/&#x8BFB;&#x5199;&#x9501;"></a>&#x4E92;&#x65A5;&#x9501;/&#x8BFB;&#x5199;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乐观锁-悲观锁"><span class="nav-number">5.</span> <span class="nav-text"><a href="#&#x4E50;&#x89C2;&#x9501;-&#x60B2;&#x89C2;&#x9501;" class="headerlink" title="&#x4E50;&#x89C2;&#x9501;/&#x60B2;&#x89C2;&#x9501;"></a>&#x4E50;&#x89C2;&#x9501;/&#x60B2;&#x89C2;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段锁"><span class="nav-number">6.</span> <span class="nav-text"><a href="#&#x5206;&#x6BB5;&#x9501;" class="headerlink" title="&#x5206;&#x6BB5;&#x9501;"></a>&#x5206;&#x6BB5;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁-轻量级锁-重量级锁"><span class="nav-number">7.</span> <span class="nav-text"><a href="#&#x504F;&#x5411;&#x9501;-&#x8F7B;&#x91CF;&#x7EA7;&#x9501;-&#x91CD;&#x91CF;&#x7EA7;&#x9501;" class="headerlink" title="&#x504F;&#x5411;&#x9501;/&#x8F7B;&#x91CF;&#x7EA7;&#x9501;/&#x91CD;&#x91CF;&#x7EA7;&#x9501;"></a>&#x504F;&#x5411;&#x9501;/&#x8F7B;&#x91CF;&#x7EA7;&#x9501;/&#x91CD;&#x91CF;&#x7EA7;&#x9501;</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自旋锁"><span class="nav-number">8.</span> <span class="nav-text"><a href="#&#x81EA;&#x65CB;&#x9501;" class="headerlink" title="&#x81EA;&#x65CB;&#x9501;"></a>&#x81EA;&#x65CB;&#x9501;</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#公平锁-非公平锁"><span class="nav-number">1.</span> <span class="nav-text">公平锁/非公平锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#可重入锁（递归锁）"><span class="nav-number">2.</span> <span class="nav-text">可重入锁（递归锁）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#独享锁-共享锁"><span class="nav-number">3.</span> <span class="nav-text">独享锁/共享锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#互斥锁-读写锁"><span class="nav-number">4.</span> <span class="nav-text">互斥锁/读写锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#乐观锁-悲观锁"><span class="nav-number">5.</span> <span class="nav-text">乐观锁/悲观锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分段锁"><span class="nav-number">6.</span> <span class="nav-text">分段锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#偏向锁-轻量级锁-重量级锁"><span class="nav-number">7.</span> <span class="nav-text">偏向锁/轻量级锁/重量级锁</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#自旋锁"><span class="nav-number">8.</span> <span class="nav-text">自旋锁</span></a></li></ol></div>
             
 
           </div>
@@ -1083,41 +1083,9 @@
         onPopupClose();
       }
     });
-  </script>
-
-
-
-
-
-  
-
-  
-
-  
-
-  
-  
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({
-        tex2jax: {
-          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
-          processEscapes: true,
-          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-        }
-      });
-    </script>
-
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Queue(function() {
-        var all = MathJax.Hub.getAllJax(), i;
-        for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-        }
-      });
-    </script>
-    <script type="text/javascript" src="//cdn.bootcss.com/mathjax/2.7.1/latest.js?config=TeX-AMS-MML_HTMLorMML"></script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
 <script type="text/x-mathjax-config">
-  MathJax.Hub.Config("");
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
 </script>
 
 <script type="text/x-mathjax-config">
@@ -1129,12 +1097,22 @@
   });
 </script>
 
-<script type="text/javascript" src="custom_mathjax_source">
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
 </script>
 <!-- End: Injected MathJax -->
 <!-- hexo-inject:end -->
+
+
+
+
+
   
 
+  
+
+  
+
+  
 
   
 
