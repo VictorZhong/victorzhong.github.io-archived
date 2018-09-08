@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Machine Learning,TensorFlow," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="在 TensorFlow笔记1——TensorFlow框架 中我们讨论了$\sum_{i}{X_iW_i}$ 这种最简单的神经元模型，并基于这个神经元总结了用TensorFlow搭建神经网络的模板，本文将在此基础上进行延伸，讨论基于$f(\sum_{i}{X_iW_i}+b)​$这种神经元的神经网络优化。">
+<meta name="keywords" content="Machine Learning,TensorFlow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TensorFlow笔记2——神经网络优化">
+<meta property="og:url" content="http://victorzhong.github.io/2018/04/07/TensorFlow笔记2——神经网络优化/index.html">
+<meta property="og:site_name" content="Victor&#39;s Sketch">
+<meta property="og:description" content="在 TensorFlow笔记1——TensorFlow框架 中我们讨论了$\sum_{i}{X_iW_i}$ 这种最简单的神经元模型，并基于这个神经元总结了用TensorFlow搭建神经网络的模板，本文将在此基础上进行延伸，讨论基于$f(\sum_{i}{X_iW_i}+b)​$这种神经元的神经网络优化。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2018040701.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2018040702.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2018040703.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2018040704.png">
+<meta property="og:image" content="http://victorzhong.github.io/uploads/2018040705.png">
+<meta property="og:updated_time" content="2018-09-08T10:12:54.862Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="TensorFlow笔记2——神经网络优化">
+<meta name="twitter:description" content="在 TensorFlow笔记1——TensorFlow框架 中我们讨论了$\sum_{i}{X_iW_i}$ 这种最简单的神经元模型，并基于这个神经元总结了用TensorFlow搭建神经网络的模板，本文将在此基础上进行延伸，讨论基于$f(\sum_{i}{X_iW_i}+b)​$这种神经元的神经网络优化。">
+<meta name="twitter:image" content="http://victorzhong.github.io/uploads/2018040701.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://victorzhong.github.io/2018/04/07/TensorFlow笔记2——神经网络优化/"/>
+
+
+
+
+
+  <title>TensorFlow笔记2——神经网络优化 | Victor's Sketch</title><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Victor's Sketch</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <h1 class="site-subtitle" itemprop="description"></h1>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br />
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off"
+             placeholder="搜索..." spellcheck="false"
+             type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://victorzhong.github.io/2018/04/07/TensorFlow笔记2——神经网络优化/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Victor Chung">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Victor's Sketch">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h2 class="post-title" itemprop="name headline">TensorFlow笔记2——神经网络优化</h2>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-07T12:58:00+08:00">
+                2018-04-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Machine-Learning/" itemprop="url" rel="index">
+                    <span itemprop="name">Machine Learning</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv" ></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>在 <a href="https://victorzhong.github.io/2018/03/25/TensorFlow%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94TensorFlow%E6%A1%86%E6%9E%B6/">TensorFlow笔记1——TensorFlow框架</a> 中我们讨论了$\sum_{i}{X_iW_i}$ 这种最简单的神经元模型，并基于这个神经元总结了用TensorFlow搭建神经网络的模板，本文将在此基础上进行延伸，讨论基于$f(\sum_{i}{X_iW_i}+b)​$这种神经元的神经网络优化。</p>
+<a id="more"></a>
+<h2 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h2><h3 id="神经元-f-sum-i-X-iW-i-b"><a href="#神经元-f-sum-i-X-iW-i-b" class="headerlink" title="神经元$f(\sum_{i}{X_iW_i}+b)$"></a>神经元$f(\sum_{i}{X_iW_i}+b)$</h3><p>1943年McCulloch和Pitts提出了$f(\sum_{i}{X_iW_i}+b)$神经元模型，让每个输入X与对应权重W相乘再求和，再加上参数b（偏置项bias），再经过激活函数$f$（activation function），后续文章也将使用此神经元为单元，首尾相接形成神经网络。</p>
+<h3 id="激活函数"><a href="#激活函数" class="headerlink" title="激活函数"></a>激活函数</h3><p>引入激活函数能有效提高模型的表达力，使模型具有更好的区分度。常用的激活函数如下表所示。</p>
+<table>
+<thead>
+<tr>
+<th>激活函数及TF描述</th>
+<th>表达式</th>
+<th>函数图形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>rule：<code>tf.nn.relu()</code></td>
+<td><span>$$f(x)=max(x,0)\\=
+\begin {cases}0&amp;\text{ x&lt;=0} \\ x &amp; \text {x&gt;=0} \end{cases}$$</span><!-- Has MathJax --></td>
+<td><img src="/uploads/2018040701.png" alt=""></td>
+</tr>
+<tr>
+<td>sigmoid：<code>tf.nn.sigmoid()</code></td>
+<td>$f(x)=\frac{1}{1+e^{-x}}$</td>
+<td><img src="/uploads/2018040702.png" alt=""></td>
+</tr>
+<tr>
+<td>tanh：<code>tf.nn.tanh()</code></td>
+<td>$f(x)=\frac {1-e^{-2x}}{1+e^{-2x}}$</td>
+<td><img src="/uploads/2018040703.png" alt=""></td>
+</tr>
+</tbody>
+</table>
+<h3 id="神经网络的复杂度"><a href="#神经网络的复杂度" class="headerlink" title="神经网络的复杂度"></a>神经网络的复杂度</h3><blockquote>
+<p>了解过数据结构和算法的同学对复杂度这个词肯定不陌生，它能很直观地表示一个问题的规模。神经网络的复杂度一般用NN的层数和待优化的参数的个数（W的个数+b的个数）来表示。</p>
+</blockquote>
+<p><img src="/uploads/2018040704.png" alt=""></p>
+<p>上面的神经网络有 1 个输入层、1 个隐藏层和 1 个输出层，所以层数为 2 层。参数的个数是所有参数 w 的个数加上所有参数 b 的总数，第一层参数用三行四列的二阶张量表示(即 12 个线上的权重 w)再加上 4 个偏置 b；第二层参数是四行两列的二阶张量(即 8 个线上的权重 w)再加上 2 个偏置 b。因此，总参数 = 3*4+4 + 4*2+2 = 26。</p>
+<h2 id="神经网络的优化"><a href="#神经网络的优化" class="headerlink" title="神经网络的优化"></a>神经网络的优化</h2><h3 id="损失函数loss"><a href="#损失函数loss" class="headerlink" title="损失函数loss"></a>损失函数loss</h3><blockquote>
+<p>在 <a href="https://victorzhong.github.io/2018/03/25/TensorFlow%E7%AC%94%E8%AE%B01%E2%80%94%E2%80%94TensorFlow%E6%A1%86%E6%9E%B6/">TensorFlow笔记1——TensorFlow框架</a> 中我们知道损失函数是预测值 y 与标准答案 y_ 的差距，值越小表示预测得越接近真实答案。常用的loss函数有均方误差MSE、自定义损失函数以及交叉熵CE。</p>
+</blockquote>
+<ul>
+<li>均方误差：n 个样本的预测值 y 与已知答案 y_之差的平方和，再求平均值。</li>
+</ul>
+<p>$$ MSE( y\_ , y)=\frac {\sum_{i=1}^n( y - y\_)^2}{n} $$<br>用TF描述为：<code>loss_mse = tf.reduce_mean(tf.square(y_ - y))</code></p>
+<p>这里举一个例子来帮忙我们更好地理解损失函数：</p>
+<p>预测酸奶日销量 y，$x_1$ 和 $x_2$ 是影响日销量的两个因素。 应提前采集的数据有：一段时间内，每日的 $x_1$因素、$x_2$  因素和销量 y_。采集的数据尽量多。 </p>
+<p>在本例中用销量预测产量，最优的产量应该等于销量。由于目前没有数据集，所以拟造了一套数据集。利用 Tensorflow 中函数随机生成  $x_1$、 $x_2$，制造标准答案$ y_ =  x_1 + x_2$，为了更真实，求和后还加了正负 0.05 的随机噪声。 </p>
+<p>用前一篇文章中总结的神经网络搭建模板写的TF实现如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="comment"># 预测多或少的情况一样</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 第0步：导入模块，生成模拟数据集</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">BATCH_SIZE = <span class="number">8</span></span><br><span class="line">seed = <span class="number">23455</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于seed产生随机数</span></span><br><span class="line">rng = np.random.RandomState(seed)</span><br><span class="line"><span class="comment"># 随机数返回32行2列的矩阵，作为输入数据集</span></span><br><span class="line">X = rng.rand(<span class="number">32</span>, <span class="number">2</span>)</span><br><span class="line">Y_ = [[x1 + x2 + (rng.rand() / <span class="number">10.0</span> - <span class="number">0.05</span>)] <span class="keyword">for</span> (x1, x2) <span class="keyword">in</span> X]</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第1步：定义神经网络的输入、参数和输出，定义前向传播过程</span></span><br><span class="line">x = tf.placeholder(tf.float32, shape=(<span class="keyword">None</span>, <span class="number">2</span>))</span><br><span class="line">y_ = tf.placeholder(tf.float32, shape=(<span class="keyword">None</span>, <span class="number">1</span>))</span><br><span class="line">w1 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">1</span>], stddev=<span class="number">1</span>, seed=<span class="number">1</span>))</span><br><span class="line">y = tf.matmul(x, w1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第2步：定义损失函数及反向传播方法</span></span><br><span class="line"><span class="comment"># 定义损失函数为MSE，反向传播方法为梯度下降</span></span><br><span class="line">loss_mse = tf.reduce_mean(tf.square(y_ - y))</span><br><span class="line"></span><br><span class="line">train_step = tf.train.GradientDescentOptimizer(<span class="number">0.001</span>).minimize(loss_mse)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第3步：生成会话，训练STEPS轮</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init_op = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init_op)</span><br><span class="line">    STEPS = <span class="number">20000</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(STEPS):</span><br><span class="line">        start = (i * BATCH_SIZE) % <span class="number">32</span></span><br><span class="line">        end = (i * BATCH_SIZE) % <span class="number">32</span> + BATCH_SIZE</span><br><span class="line">        sess.run(train_step, feed_dict=&#123;x: X[start:end], y_: Y_[start:end]&#125;)</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">500</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"After %d training steps, w1 is"</span> % (i)</span><br><span class="line">            <span class="keyword">print</span> sess.run(w1), <span class="string">"\n"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"final w1 is :\n"</span>, sess.run(w1)</span><br><span class="line"></span><br><span class="line"><span class="string">'''</span></span><br><span class="line"><span class="string">After 0 training steps, w1 is</span></span><br><span class="line"><span class="string">[[-0.80974597]</span></span><br><span class="line"><span class="string"> [ 1.4852903 ]] </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">After 19000 training steps, w1 is</span></span><br><span class="line"><span class="string">[[0.974931 ]</span></span><br><span class="line"><span class="string"> [1.0206276]] </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">After 19500 training steps, w1 is</span></span><br><span class="line"><span class="string">[[0.9777026]</span></span><br><span class="line"><span class="string"> [1.0181949]] </span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">final w1 is :</span></span><br><span class="line"><span class="string">[[0.98019385]</span></span><br><span class="line"><span class="string"> [1.0159807 ]]</span></span><br><span class="line"><span class="string">'''</span></span><br></pre></td></tr></table></figure>
+<p>可以看到，两个参数都在趋近1，最后的结果是酸奶销量$y=0.98x_1+1.02x_2$，与标准答案标准答案$ y_ =  x_1 + x_2$非常接近，拟合正确。</p>
+<ul>
+<li>自定义</li>
+</ul>
+<p><strong>自定义损失函数</strong>是指根据问题的实际情况，定制合理的损失函数。比如上例中，如果预测销量大于实际销量则会损失成本；如果预测销量小于实际销量则会损失利润。在实际生活中，往往制造一盒酸奶的成本和销售一盒酸奶的利润是不等价的。因此，需要使用符合该问题的自定义损失函数。</p>
+<p>自定义损失函数为：$loss=\sum_nf(y\_,y)$</p>
+<p>其损失定义为分段函数：</p>
+<span>$$f(y\_,y)=\begin{cases}
+
+𝑃𝑅𝑂𝐹𝐼𝑇 * (y\_-y) &amp; \text{y&lt;y_} \\ 
+
+𝐶𝑂𝑆𝑇 * (y-y\_) &amp; \text{y&gt;=y_} \end{cases}$$</span><!-- Has MathJax -->
+<p>用 Tensorflow 函数表示为：<code>loss = tf.reduce_sum(tf.where(tf.greater(y,y_),COST(y-y_),PROFIT(y_-y)))</code>，其中<code>tf.greater(y,y_)</code>判断y是否大于y_，为真执行<code>COST(y-y_)</code>，否则执行<code>PROFIT(y_-y)</code>。</p>
+<p>来遛一下这个损失函数。假设酸奶成本为 1 元，酸奶销售利润为 9 元，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"><span class="comment"># 预测成本1元，利润9元</span></span><br><span class="line"><span class="comment"># 预测少了损失大，所以要尽可能预测多</span></span><br><span class="line"><span class="comment"># 第0步：导入模块，生成模拟数据集</span></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">BATCH_SIZE = <span class="number">8</span></span><br><span class="line">seed = <span class="number">23455</span></span><br><span class="line">COST = <span class="number">1</span></span><br><span class="line">PROFIT = <span class="number">9</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 基于seed产生随机数</span></span><br><span class="line">rng = np.random.RandomState(seed)</span><br><span class="line"><span class="comment"># 随机数返回32行2列的矩阵，作为输入数据集</span></span><br><span class="line">X = rng.rand(<span class="number">32</span>, <span class="number">2</span>)</span><br><span class="line">Y_ = [[x1 + x2 + (rng.rand() / <span class="number">10.0</span> - <span class="number">0.05</span>)] <span class="keyword">for</span> (x1, x2) <span class="keyword">in</span> X]</span><br><span class="line"><span class="comment"># 第1步：定义神经网络的输入、参数和输出，定义前向传播过程</span></span><br><span class="line">x = tf.placeholder(tf.float32, shape=(<span class="keyword">None</span>, <span class="number">2</span>))</span><br><span class="line">y_ = tf.placeholder(tf.float32, shape=(<span class="keyword">None</span>, <span class="number">1</span>))</span><br><span class="line">w1 = tf.Variable(tf.random_normal([<span class="number">2</span>, <span class="number">1</span>], stddev=<span class="number">1</span>, seed=<span class="number">1</span>))</span><br><span class="line">y = tf.matmul(x, w1)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第2步：定义损失函数及反向传播方法</span></span><br><span class="line"><span class="comment"># 定义损失函数为MSE，反向传播方法为梯度下降</span></span><br><span class="line"><span class="comment">#loss_mse = tf.reduce_mean(tf.square(y_ - y))</span></span><br><span class="line">loss_mse = tf.reduce_mean(tf.where(tf.greater(y,y_),(y-y_)*COST,(y_-y)*PROFIT))</span><br><span class="line"></span><br><span class="line">train_step = tf.train.GradientDescentOptimizer(<span class="number">0.001</span>).minimize(loss_mse)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 第3步：生成会话，训练STEPS轮</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init_op = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init_op)</span><br><span class="line">    STEPS = <span class="number">20000</span></span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(STEPS):</span><br><span class="line">        start = (i * BATCH_SIZE) % <span class="number">32</span></span><br><span class="line">        end = (i * BATCH_SIZE) % <span class="number">32</span> + BATCH_SIZE</span><br><span class="line">        sess.run(train_step, feed_dict=&#123;x: X[start:end], y_: Y_[start:end]&#125;)</span><br><span class="line">        <span class="keyword">if</span> i % <span class="number">500</span> == <span class="number">0</span>:</span><br><span class="line">            <span class="keyword">print</span> <span class="string">"After %d training steps, w1 is"</span> % (i)</span><br><span class="line">            <span class="keyword">print</span> sess.run(w1), <span class="string">"\n"</span></span><br><span class="line">    <span class="keyword">print</span> <span class="string">"final w1 is :\n"</span>, sess.run(w1)</span><br></pre></td></tr></table></figure>
+<p>最终结果如下，可以看到模型已经在往多了预测。<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">final w1 is :</span><br><span class="line">[[1.0178195]</span><br><span class="line"> [1.0444762]]</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>交叉熵CE(Cross Entropy)<br><strong>交叉熵</strong>表征两个概率分布之间的距离。交叉熵越大，两个概率分布距离越远，两个概率分布差别越大；交叉熵越小，两个概率分布距离越近，两个概率分布越相似。<br>交叉熵的计算公式为：<span>$H(y\_,y)=-\sum y\_ * \log y$</span><!-- Has MathJax -->
+用TF描述为：<code>ce= -tf.reduce_mean(y_* tf.log(tf.clip_by_value(y, 1e-12, 1.0)))</code>，其中<code>tf.clip_by_value(y, 1e-12, 1.0)</code>是为了保证参数是在0与1之间。<br>例如：<br>两个神经网络模型解决二分类问题中，已知标准答案为 $y\_ = (1, 0)$，第一个神经网络模型预测结果为$y_1=(0.6, 0.4)$，第二个神经网络模型预测结果为 $y_2=(0.8, 0.2)$，判断哪个神经网络模型预测的结果更接近标准答案。<br>根据交叉熵的计算公式得:<br>$$H_1((1,0),(0.6,0.4)) = -(1*\log0.6 + 0*\log0.4) ≈ -(-0.222 + 0) = 0.222$$<br>$$H_2((1,0),(0.8,0.2)) = -(1*\log0.8 + 0*\log0.2) ≈ -(-0.097 + 0) = 0.097$$<br>由于 0.222&gt;0.097，所以预测结果 $y_2$ 与标准答案 y_更接近，$y_2$ 预测更准确。</li>
+</ul>
+<p>在实际操作中，为了让n分类的n个输出（$y_1,y_2,…,y_n$）符合概率分布，tf引入了<code>softmax()</code>函数：<br>$\forall x       P(X=x) \in [0,1] 且 \sum_x P(X=x)=1 $<br>$softmax(y_i)=\frac{e^{y_i}}{\sum_{j=1}^ne^{y_j}}$<br>用TF描述为：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ce = tf.nn.sparse_softmax_cross_entropy_with_logits(logits=y,labels=tf.argmax(y_, <span class="number">1</span>)) </span><br><span class="line">cem = tf.reduce_mean(ce)</span><br></pre></td></tr></table></figure></p>
+<h3 id="学习率learning-rate"><a href="#学习率learning-rate" class="headerlink" title="学习率learning_rate"></a>学习率learning_rate</h3><p>学习率表示了每次参数更新的幅度大小。学习率过大，会导致待优化的参数在最小值附近波动，不收敛；学习率过小，会导致待优化的参数收敛缓慢。在训练过程中，参数的更新向着损失函数梯度下降的方向。<br>参数的更新公式为：$$w_{n+1}=w_n-learning_rate\nabla​$$<br>其中，$w_{n+1}​$为更新后的参数，$w_n​$为当前参数，$\nabla​$为损失函数的梯度(导数)<br>假设损失函数为 $loss = (w + 1)^2​$。梯度是损失函数 loss 的导数为$ \nabla=2w+2​$。如参数初值为 5，学习率为 0.2，则参数和损失函数更新如下:</p>
+<table>
+<thead>
+<tr>
+<th>次数</th>
+<th>参数w</th>
+<th>计算过程</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1次</td>
+<td>5</td>
+<td>5 - 0.2 <em> (2 </em> 5 + 2) = 2.6</td>
+</tr>
+<tr>
+<td>2次</td>
+<td>2.6</td>
+<td>2.6 - 0.2 <em> (2 </em> 2.6 + 2) = 1.16</td>
+</tr>
+<tr>
+<td>3次</td>
+<td>1.16</td>
+<td>1.16 – 0.2 <em> (2 </em> 1.16 + 2) = 0.296</td>
+</tr>
+<tr>
+<td>4次</td>
+<td>0.296</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>损失函数 $loss = (w + 1)^2$的图像如下图所示。由图可知，损失函数loss的最小值会在(-1,0)处得到，此时损失函数的导数为0,得到最终参数w = -1。<br><img src="/uploads/2018040705.png" alt=""><br>来段代码验证一下。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding:utf-8</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> tensorflow <span class="keyword">as</span> tf</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义待优化参数w的初值为5</span></span><br><span class="line">w = tf.Variable(tf.constant(<span class="number">5</span>, dtype=tf.float32))</span><br><span class="line"><span class="comment"># 定义损失函数loss</span></span><br><span class="line">loss = tf.square(w + <span class="number">1</span>)</span><br><span class="line"><span class="comment"># 定义反向传播方法</span></span><br><span class="line">train_step = tf.train.GradientDescentOptimizer(<span class="number">0.2</span>).minimize(loss)</span><br><span class="line"><span class="comment"># 生成会话，训练40轮</span></span><br><span class="line"><span class="keyword">with</span> tf.Session() <span class="keyword">as</span> sess:</span><br><span class="line">    init_op = tf.global_variables_initializer()</span><br><span class="line">    sess.run(init_op)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> range(<span class="number">40</span>):</span><br><span class="line">        sess.run(train_step)</span><br><span class="line">        w_val = sess.run(w)</span><br><span class="line">        loss_val = sess.run(loss)</span><br><span class="line">        <span class="keyword">print</span> <span class="string">"after %d steps: w is %f,loss is %f."</span> % (i, w_val, loss_val)</span><br></pre></td></tr></table></figure></p>
+<p>输出为：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">after 38 steps: w is -1.000000,loss is 0.000000.</span><br><span class="line">after 39 steps: w is -1.000000,loss is 0.000000.</span><br></pre></td></tr></table></figure></p>
+<p>可见代码成功找到了(-1,0)的点。</p>
+<h3 id="滑动平均ema"><a href="#滑动平均ema" class="headerlink" title="滑动平均ema"></a>滑动平均ema</h3><h3 id="正则化regularization"><a href="#正则化regularization" class="headerlink" title="正则化regularization"></a>正则化regularization</h3>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Machine-Learning/" rel="tag"># Machine Learning</a>
+          
+            <a href="/tags/TensorFlow/" rel="tag"># TensorFlow</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/25/TensorFlow笔记1——TensorFlow框架/" rel="next" title="TensorFlow笔记1——TensorFlow框架">
+                <i class="fa fa-chevron-left"></i> TensorFlow笔记1——TensorFlow框架
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/uploads/avatar.png"
+               alt="Victor Chung" />
+          <p class="site-author-name" itemprop="name">Victor Chung</p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+           
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/VictorZhong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#基础概念"><span class="nav-number">1.</span> <span class="nav-text">基础概念</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#神经元-f-sum-i-X-iW-i-b"><span class="nav-number">1.1.</span> <span class="nav-text">神经元$f(\sum_{i}{X_iW_i}+b)$</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#激活函数"><span class="nav-number">1.2.</span> <span class="nav-text">激活函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#神经网络的复杂度"><span class="nav-number">1.3.</span> <span class="nav-text">神经网络的复杂度</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#神经网络的优化"><span class="nav-number">2.</span> <span class="nav-text">神经网络的优化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#损失函数loss"><span class="nav-number">2.1.</span> <span class="nav-text">损失函数loss</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#学习率learning-rate"><span class="nav-number">2.2.</span> <span class="nav-text">学习率learning_rate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#滑动平均ema"><span class="nav-number">2.3.</span> <span class="nav-text">滑动平均ema</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#正则化regularization"><span class="nav-number">2.4.</span> <span class="nav-text">正则化regularization</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy;  2015 - 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Victor Chung</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
